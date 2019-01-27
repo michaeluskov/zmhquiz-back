@@ -1,0 +1,18 @@
+service: zmhquiz # NOTE: update this with your service name
+app: zmhquiz
+tenant: michaeluskov
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-east-1
+
+functions:
+  hello:
+    handler: index.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+plugins:
+  - serverless-offline

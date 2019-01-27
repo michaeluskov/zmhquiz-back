@@ -1,0 +1,31 @@
+{
+  "name": "zmhquiz-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "sls offline start",
+    "local": "node runlocal.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaeluskov/zmhquiz-back.git"
+  },
+  "author": "Michael Uskov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaeluskov/zmhquiz-back/issues"
+  },
+  "homepage": "https://github.com/michaeluskov/zmhquiz-back#readme",
+  "dependencies": {
+    "bson": "^4.0.1",
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.13",
+    "mongodb-promise": "0.0.4",
+    "serverless-http": "^1.9.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^4.2.0"
+  }
+}
