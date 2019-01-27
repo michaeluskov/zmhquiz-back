@@ -1,8 +1,11 @@
 const serverless = require('serverless-http');
 const express = require('express');
 const app = express();
+const bodyParser = require("body-parser");
 const db = require("./src/db");
 const asyncHandler = require("./src/asyncHandler");
+
+app.use(bodyParser.json());
 
 app.get('/', asyncHandler(async function (req, res) {
     const dbConnection = await db.getDbConnection();

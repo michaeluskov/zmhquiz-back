@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/michaeluskov/zmhquiz-back#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "bson": "^4.0.1",
     "config": "^3.0.1",
     "express": "^4.16.4",
