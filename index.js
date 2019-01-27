@@ -16,6 +16,10 @@ const errorHandler = (err, req, res, next) => {
         stack: err.stack
         }
     });
+    console.error({
+        message: err.message,
+        stack: err.stack
+    });
 };
 
 app.use(errorHandler);
