@@ -2,11 +2,7 @@ const serverless = require('serverless-http');
 const express = require('express');
 const app = express();
 const db = require("./src/db");
-
-const asyncHandler = (func) => (req, res, next) => {
-  func(req, res)
-      .catch(e => next(e));
-};
+const asyncHandler = require("./src/asyncHandler");
 
 app.get('/', asyncHandler(async function (req, res) {
     const dbConnection = await db.getDbConnection();
