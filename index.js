@@ -6,7 +6,7 @@ const cors = require("cors");
 
 const routes = require("./src/routes");
 
-const isProduction = process.argv[1].indexOf("runlocal") === -1 || process.env.IS_OFFLINE;
+const isProduction = process.argv[1].indexOf("runlocal") === -1 || !process.env.IS_OFFLINE;
 
 app.use(bodyParser.json());
 app.use(cors());

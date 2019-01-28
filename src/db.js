@@ -13,6 +13,8 @@ module.exports.getDbConnection = async () => {
 
 
 module.exports.getQuiz = async (quizId) => {
+    if (!quizId)
+        return null;
     const dbConnection = await module.exports.getDbConnection();
     const quizes = dbConnection.collection("quizes");
     const quiz = await quizes.findOne({
