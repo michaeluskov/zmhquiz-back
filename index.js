@@ -2,31 +2,29 @@ const serverless = require('serverless-http');
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
-const db = require("./src/db");
-const asyncHandler = require("./src/asyncHandler");
+const cors = require("cors");
+
+const routes = require("./src/routes");
+
+const isProduction = process.argv[1].indexOf("runlocal") === -1 || process.env.IS_OFFLINE;
 
 app.use(bodyParser.json());
+app.use(cors());
 
-app.get('/', asyncHandler(async function (req, res) {
-    const dbConnection = await db.getDbConnection();
-    res.send('Hello World!')
-}));
+routes(app);
 
 const errorHandler = (err, req, res, next) => {
     res.status(500);
     res.json({ error: {
         message: err.message,
-        stack: err.stack
+        stack: !isProduction && err.stack
         }
     });
-    console.error({
-        message: err.message,
-        stack: err.stack
-    });
+    console.error(err);
 };
 
 app.use(errorHandler);
 
 module.exports.app = app;
-if (process.argv[1].indexOf("runlocal") === -1)
+if (isProduction)
     module.exports.handler = serverless(app);

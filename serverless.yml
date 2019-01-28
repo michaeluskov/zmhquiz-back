@@ -16,3 +16,11 @@ functions:
 
 plugins:
   - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: api.zmh.wtf
+    basePath: ''
+    stage: dev
+    createRoute53Record: true
