@@ -10,3 +10,13 @@ module.exports.getDbConnection = async () => {
   dbConnection = client.db("zmhquiz");
   return dbConnection;
 };
+
+
+module.exports.getQuiz = async (quizId) => {
+    const dbConnection = await module.exports.getDbConnection();
+    const quizes = dbConnection.collection("quizes");
+    const quiz = await quizes.findOne({
+        id: quizId
+    });
+    return quiz;
+};
