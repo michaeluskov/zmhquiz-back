@@ -11,7 +11,6 @@ module.exports.getDbConnection = async () => {
   return dbConnection;
 };
 
-
 module.exports.getQuiz = async (quizId) => {
     if (!quizId)
         return null;

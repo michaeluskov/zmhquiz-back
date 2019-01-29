@@ -30,6 +30,30 @@ module.exports = app => {
     app.post('/answer', asyncHandler(async function (req, res) {
         if (!checkAccess(req, res)) return;
         const quiz = await db.getQuiz(req.body.quiz);
+        const now = new Date();
+        if (new Date(quiz.from) > now || now > new Date(quiz.till))
+            return (res.status(403), res.json({ error: "Увы, время истекло и ты больше не можешь отвечать на вопросы"}));
+        const dbConnection = await db.getDbConnection();
+        const answersCollection = dbConnection.collection("answers");
+        let answer = await answersCollection.findOne({
+           questionId: req.body.questionId,
+           login: req.body.login,
+        });
+        if (!answer) {
+            answer = {
+                questionId: req.body.questionId,
+                login: req.body.login,
+                answerNum: req.body.answerNum
+            };
+            await answersCollection.insert(answer);
+        }
+        res.json({
+            rightAnswerNum: quiz
+                .questions
+                .find(q => q.id === answer.questionId)
+                .answers
+                .findIndex(a => a.isRight)
+        });
     }));
 
 };
