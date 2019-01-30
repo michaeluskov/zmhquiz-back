@@ -13,3 +13,28 @@ module.exports.checkAccess = (req, res) => {
     res.status(403);
     res.json({ error: "У тебя нет доступа или неправильная ссылка" });
 };
+
+const adminSessions = {};
+
+function makeId() {
+    let text = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < 36; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+module.exports.adminSessions = {
+  makeNew() {
+      const sessionId = makeId();
+      adminSessions[sessionId] = true;
+      return sessionId;
+  },
+
+  isValid: (sessionId) => {
+      return (sessionId in adminSessions);
+  },
+
+};

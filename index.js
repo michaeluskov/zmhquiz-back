@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const routes = require("./src/routes");
+const admin_routes = require("./src/admin_routes");
+
 
 const isProduction = process.argv[1].indexOf("runlocal") === -1 || !process.env.IS_OFFLINE;
 
@@ -12,6 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 routes(app);
+admin_routes(app);
 
 const errorHandler = (err, req, res, next) => {
     res.status(500);
