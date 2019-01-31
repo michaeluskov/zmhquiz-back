@@ -14,6 +14,16 @@ module.exports.checkAccess = (req, res) => {
     res.json({ error: "У тебя нет доступа или неправильная ссылка" });
 };
 
+module.exports.checkAdminAccess = (req, res) => {
+    const params = req.method.toUpperCase() === "GET" ? req.query : req.body;
+    const sessionId = params.sessionId;
+    if (module.exports.adminSessions.isValid(sessionId))
+        return true;
+    res.status(403);
+    res.json({ error: "Нет админского доступа" });
+    return false;
+};
+
 const adminSessions = {};
 
 function makeId() {
