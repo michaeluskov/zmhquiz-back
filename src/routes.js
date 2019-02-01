@@ -51,8 +51,7 @@ module.exports = app => {
         }
         res.json({
             rightAnswerNum: quiz
-                .questions
-                .find(q => q.id === answer.questionId)
+                .questions[questionNum]
                 .answers
                 .findIndex(a => a.isRight)
         });
