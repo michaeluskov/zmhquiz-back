@@ -36,16 +36,18 @@ module.exports = app => {
         const dbConnection = await db.getDbConnection();
         const answersCollection = dbConnection.collection("answers");
         let answer = await answersCollection.findOne({
-           questionId: req.body.questionId,
+           quizId: req.body.quiz,
+           questionNum: req.body.questionNum,
            login: req.body.login,
         });
         if (!answer) {
             answer = {
-                questionId: req.body.questionId,
+                quizId: req.body.quiz,
+                questionNum: req.body.questionNum,
                 login: req.body.login,
                 answerNum: req.body.answerNum
             };
-            await answersCollection.insert(answer);
+            await answersCollection.insertOne(answer);
         }
         res.json({
             rightAnswerNum: quiz

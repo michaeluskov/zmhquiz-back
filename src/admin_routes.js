@@ -24,4 +24,15 @@ module.exports = function (app) {
         })
     }));
 
+    app.post('/admin/quiz', asyncHandler(async function (req, res) {
+        if (!access.checkAdminAccess(req, res)) return;
+        const dbConnection = await db.getDbConnection();
+        const quizesCollection = dbConnection.collection("quizes");
+        const quiz = await quizesCollection.findOne({ id: req.body.quiz.id });
+        if (quiz)
+            await quizesCollection.deleteOne({ id: req.body.quiz.id });
+        await quizesCollection.insertOne(req.body.quiz);
+        return res.json({ error: undefined });
+    }));
+
 };
