@@ -38,4 +38,26 @@ module.exports = function (app) {
         return res.json({ error: undefined });
     }));
 
+    app.get('/admin/results', asyncHandler(async function (req, res) {
+        if (!access.checkAdminAccess(req, res)) return;
+        const dbConnection = await db.getDbConnection();
+        const quiz = await dbConnection.collection("quizes").findOne({ id: req.query.quizId });
+        const userAnswers = await dbConnection.collection("answers")
+            .aggregate([
+                { $match: { quizId: req.query.quizId } },
+                {
+                    $group: {
+                        _id: "$login",
+                        answers: {
+                            $push: { questionNum: "$questionNum", answerNum: "$answerNum" }
+                        }
+                    }
+                }
+            ]).toArray();
+        return res.json({
+            quiz,
+            userAnswers
+        })
+    }));
+
 };
