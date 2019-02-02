@@ -31,7 +31,10 @@ module.exports = function (app) {
         const quiz = await quizesCollection.findOne({ id: req.body.quiz.id });
         if (quiz)
             await quizesCollection.deleteOne({ id: req.body.quiz.id });
-        await quizesCollection.insertOne(req.body.quiz);
+        await quizesCollection.insertOne({
+            ...req.body.quiz,
+            createdAt: Date.now()
+        });
         return res.json({ error: undefined });
     }));
 

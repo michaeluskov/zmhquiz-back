@@ -58,8 +58,9 @@ module.exports = app => {
             answer = {
                 quizId: req.body.quiz,
                 questionNum: req.body.questionNum,
-                login: req.body.login,
-                answerNum: req.body.answerNum
+                login: decodeURIComponent(req.body.login),
+                answerNum: req.body.answerNum,
+                createdAt: Date.now()
             };
             await answersCollection.insertOne(answer);
         }
