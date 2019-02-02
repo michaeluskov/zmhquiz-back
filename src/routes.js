@@ -14,9 +14,11 @@ module.exports = app => {
     app.get('/questionMeta', asyncHandler(async function (req, res) {
         if (!checkAccess(req, res)) return;
         const quiz = await db.getQuiz(req.query.quiz);
-        const now = new Date();
-        if (new Date(quiz.from) > now || now > new Date(quiz.till))
-            return (res.status(403), res.json({ error: "Увы, время истекло и ты больше не можешь отвечать на вопросы"}));
+        const now = new Date().getTime();
+        if (new Date(quiz.from).getTime() > now || now > new Date(quiz.till).getTime()) {
+            console.log(`${new Date(quiz.from).getTime()} ${now} ${new Date(quiz.till).getTime()}`)
+            return (res.status(403), res.json({error: "Увы, время истекло и ты больше не можешь отвечать на вопросы"}));
+        }
         return res.json({
             questions: quiz.questions.map(q => ({
                 ...q,
@@ -30,8 +32,8 @@ module.exports = app => {
     app.post('/answer', asyncHandler(async function (req, res) {
         if (!checkAccess(req, res)) return;
         const quiz = await db.getQuiz(req.body.quiz);
-        const now = new Date();
-        if (new Date(quiz.from) > now || now > new Date(quiz.till))
+        const now = new Date().getTime();
+        if (new Date(quiz.from).getTime() > now || now > new Date(quiz.till).getTime())
             return (res.status(403), res.json({ error: "Увы, время истекло и ты больше не можешь отвечать на вопросы"}));
         const dbConnection = await db.getDbConnection();
         const answersCollection = dbConnection.collection("answers");
@@ -51,7 +53,7 @@ module.exports = app => {
         }
         res.json({
             rightAnswerNum: quiz
-                .questions[questionNum]
+                .questions[req.body.questionNum]
                 .answers
                 .findIndex(a => a.isRight)
         });
