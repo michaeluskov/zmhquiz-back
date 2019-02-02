@@ -1,3 +1,4 @@
+const config = require("config");
 const access = require("./access");
 const checkAccess = access.checkAccess;
 const asyncHandler = require("./asyncHandler");
@@ -13,11 +14,22 @@ module.exports = app => {
 
     app.get('/questionMeta', asyncHandler(async function (req, res) {
         if (!checkAccess(req, res)) return;
+        const dbConnection = await db.getDbConnection();
         const quiz = await db.getQuiz(req.query.quiz);
         const now = new Date().getTime();
         if (new Date(quiz.from).getTime() > now || now > new Date(quiz.till).getTime()) {
             console.log(`${new Date(quiz.from).getTime()} ${now} ${new Date(quiz.till).getTime()}`)
             return (res.status(403), res.json({error: "Увы, время истекло и ты больше не можешь отвечать на вопросы"}));
+        }
+        if (config.get("onlyOnce")) {
+            const dbConnection = await db.getDbConnection();
+            const answersCount = await dbConnection.collection("answers").count({
+                quizId: quiz.id,
+                login: decodeURIComponent(req.query.login)
+            });
+            if (answersCount === quiz.questions.length) {
+                return (res.status(403), res.json({error: "Ты уже ответил на этот квиз" }))
+            }
         }
         return res.json({
             questions: quiz.questions.map(q => ({
