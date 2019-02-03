@@ -8,7 +8,7 @@ module.exports.checkAccess = (req, res) => {
     const url = `https://zmh.wtf/${params.quiz}`;
     const md5Str = `${url};${decodeURIComponent(params.login)};${config.get("hashSalt")}`;
     const trueHash = crypto.createHash('md5').update(md5Str).digest("hex");
-    if (trueHash.indexOf(params.hash) !== -1)
+    if (parseInt(params.hash, 16) === parseInt(trueHash, 16))
         return true;
     res.status(403);
     res.json({ error: "У тебя нет доступа или неправильная ссылка" });
